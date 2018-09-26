@@ -14,12 +14,39 @@ pipeline{
                     echo 'Now Archiving...'
                     archiveArtifacts artifacts:'**/target/*.war'
                 }
+                failure{
+                    echo 'Cannot copy the artifacts to jenkins'
+                }
             }
         }
         stage('Deploy to staging'){
             steps{
                 build job:'Deploy-to-staging'
                 build job:'static-analysis-job'
+            }
+            post{
+                success{
+                    echo 'Deployed to staging!'
+                }
+                failure{
+                    echo 'Deployment to staging failed!!'
+                }
+            }
+        }
+        stage('Deploy to production'){
+            steps{
+                timout(time:5,unit:'Days'){
+                    input message:'Approve PRODUCTION deployment?'
+                }
+                build job:'Deploy-to-prod'
+            }
+            post{
+                success{
+                    echo 'Deployed to production!'
+                }
+                failure{
+                    echo 'Deployment to production failed!!'
+                }
             }
         }
     }
