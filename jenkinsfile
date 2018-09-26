@@ -34,7 +34,7 @@ pipeline{
             parallel{
                 stage('Deploy to staging'){
                     steps{
-                        bat "pscp -i C:/Users/Rayala/Desktop/Chaitanya/AWS/tomcatPrivateKey.ppk C:/Program Files (x86)/Jenkins/workspace/fullyAutomatedJob/webapp/target/webapp.war ec2-user@{params.tomcat_dev}:/var/lib/tomcat8/webapps"
+                        bat "pscp -i C:/Users/Rayala/Desktop/Chaitanya/AWS/tomcatPrivateKey.ppk C:/Program Files (x86)/Jenkins/workspace/fullyAutomatedJob/webapp/target/webapp.war ec2-user@${params.tomcat_dev}:/var/lib/tomcat8/webapps"
                     }
                 }
                 stage('Deploy to production'){
