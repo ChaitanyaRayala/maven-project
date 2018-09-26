@@ -6,7 +6,7 @@ pipeline{
     }
     //To specify IP addresses for aws tomcat instances
     parameters{
-        string(name:'tomcat_dev',defaultValue:'34.227.162.42',description:'staging server')
+        string(name:'tomcat_dev',defaultValue:'ec2-34-227-162-42.compute-1.amazonaws.com',description:'staging server')
         string(name:'tomcat_production',defaultValue:'54.175.78.150',description:'production server')
     }
     
@@ -34,7 +34,7 @@ pipeline{
             parallel{
                 stage('Deploy to staging'){
                     steps{
-                        bat "winscp scp:ec2-user@{params.tomcat_dev}:/var/lib/tomcat7/webapps /privatekey="C:/Users/Rayala/Desktop/Chaitanya/AWS/tomcatPrivateKey.ppk" /upload **/target/*.war"
+                        bat "pscp -i C:\Users\Rayala\Desktop\Chaitanya\AWS\tomcatPrivateKey.ppk C:\Program Files (x86)\Jenkins\workspace\fullyAutomatedJob\webapp\target\webapp.war ec2-user@{params.tomcat_dev}:/var/lib/tomcat8/webapps"
                     }
                 }
                 stage('Deploy to production'){
