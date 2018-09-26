@@ -4,6 +4,17 @@ pipeline{
         maven 'localMaven'
         jdk 'localJdk'
     }
+    //To specify IP addresses for aws tomcat instances
+    parameters{
+        string(name:'tomcat-dev',defaultValue:'34.227.162.42',description:'staging server')
+        string(name:'tomcat-production',defaultValue:'54.175.78.150',description:'production server')
+    }
+    
+    //Run the jenkins job at given time conditions
+    triggers{
+        pollSCM('* * * * *')
+    }
+
     stages{
         stage('Build'){
             steps{
@@ -11,41 +22,25 @@ pipeline{
             }
             post{
                 success{
-                    echo 'Now Archiving...'
-                    archiveArtifacts artifacts:'**/target/*.war'
+                    echo 'Now archiving..'
+                    artifactArchive artifacts:'**/target/*.war'
                 }
                 failure{
-                    echo 'Cannot copy the artifacts to jenkins'
+                    echo 'cannot copy artifacts to jenkins'
                 }
             }
         }
-        stage('Deploy to staging'){
-            steps{
-                build job:'Deploy-to-staging'
-                build job:'static-analysis-job'
-            }
-            post{
-                success{
-                    echo 'Deployed to staging!'
+        stage('Deployment'){
+            parallel{
+                stage('Deploy to staging'){
+                    steps{
+                        bat "scp -i C:/Users/Rayala/Desktop/Chaitanya/AWS/tomcat.pem **/target/*.war ec2-user@${params.tomcat-dev}:/var/lib/tomcat8/webapps"
+                    }
                 }
-                failure{
-                    echo 'Deployment to staging failed!!'
-                }
-            }
-        }
-        stage('Deploy to production'){
-            steps{
-                timeout(time:5,unit:'DAYS'){
-                    input message:'Approve PRODUCTION deployment?'
-                }
-                build job:'Deploy-to-prod'
-            }
-            post{
-                success{
-                    echo 'Deployed to production!'
-                }
-                failure{
-                    echo 'Deployment to production failed!!'
+                stage('Deploy to production'){
+                    steps{
+                        bat "scp -i C:/Users/Rayala/Desktop/Chaitanya/AWS/tomcat.pem **/target/*.war ec2-user@${params.tomcat-production}:/var/lib/tomcat8/webapps"
+                    }
                 }
             }
         }
