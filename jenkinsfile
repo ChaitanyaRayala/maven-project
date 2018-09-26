@@ -34,12 +34,12 @@ pipeline{
             parallel{
                 stage('Deploy to staging'){
                     steps{
-                        bat "winscp -i C:/Users/Rayala/Desktop/Chaitanya/AWS/tomcat.pem **/target/*.war ec2-user@${params.tomcat_dev}:/var/lib/tomcat8/webapps"
+                        bat "winscp.exe /console -i C:/Users/Rayala/Desktop/Chaitanya/AWS/tomcat.pem **/target/*.war ec2-user@${params.tomcat_dev}:/var/lib/tomcat8/webapps"
                     }
                 }
                 stage('Deploy to production'){
                     steps{
-                        bat "winscp -i C:/Users/Rayala/Desktop/Chaitanya/AWS/tomcat.pem **/target/*.war ec2-user@${params.tomcat_production}:/var/lib/tomcat8/webapps"
+                        bat "winscp.exe /console -i C:/Users/Rayala/Desktop/Chaitanya/AWS/tomcat.pem **/target/*.war ec2-user@${params.tomcat_production}:/var/lib/tomcat8/webapps"
                     }
                 }
             }
