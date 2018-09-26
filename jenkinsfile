@@ -23,7 +23,7 @@ pipeline{
             post{
                 success{
                     echo 'Now archiving..'
-                    artifactsArchive artifacts:'**/target/*.war'
+                    archiveArtifacts artifacts:'**/target/*.war'
                 }
                 failure{
                     echo 'cannot copy artifacts to jenkins'
