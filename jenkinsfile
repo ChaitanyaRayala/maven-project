@@ -6,8 +6,8 @@ pipeline{
     }
     //To specify IP addresses for aws tomcat instances
     parameters{
-        string(name:'tomcat-dev',defaultValue:'34.227.162.42',description:'staging server')
-        string(name:'tomcat-production',defaultValue:'54.175.78.150',description:'production server')
+        string(name:'tomcat_dev',defaultValue:'34.227.162.42',description:'staging server')
+        string(name:'tomcat_production',defaultValue:'54.175.78.150',description:'production server')
     }
     
     //Run the jenkins job at given time conditions
@@ -34,12 +34,12 @@ pipeline{
             parallel{
                 stage('Deploy to staging'){
                     steps{
-                        bat "scp -i C:/Users/Rayala/Desktop/Chaitanya/AWS/tomcat.pem **/target/*.war ec2-user@${params.tomcat-dev}:/var/lib/tomcat8/webapps"
+                        bat "winscp -i C:/Users/Rayala/Desktop/Chaitanya/AWS/tomcat.pem **/target/*.war ec2-user@${params.tomcat_dev}:/var/lib/tomcat8/webapps"
                     }
                 }
                 stage('Deploy to production'){
                     steps{
-                        bat "scp -i C:/Users/Rayala/Desktop/Chaitanya/AWS/tomcat.pem **/target/*.war ec2-user@${params.tomcat-production}:/var/lib/tomcat8/webapps"
+                        bat "winscp -i C:/Users/Rayala/Desktop/Chaitanya/AWS/tomcat.pem **/target/*.war ec2-user@${params.tomcat_production}:/var/lib/tomcat8/webapps"
                     }
                 }
             }
