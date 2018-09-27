@@ -19,6 +19,7 @@ pipeline{
         stage('Build'){
             steps{
                 bat 'mvn clean install'
+                bat "docker build -t tomcatwebserver:${env.BUILD_ID} ."
             }
             post{
                 success{
