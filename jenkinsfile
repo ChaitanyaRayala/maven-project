@@ -3,6 +3,7 @@ pipeline{
     tools{
         maven 'localMaven'
         jdk 'localJdk'
+        docker 'localDocker'
     }
     //To specify IP addresses for aws tomcat instances
     parameters{
