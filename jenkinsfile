@@ -1,9 +1,7 @@
-pipeline{
-    agent any
+node{
     tools{
         jdk 'Jdk'
         maven 'Maven'
-        org.jenkinsci.plugins.docker.commons.tools.DockerTool 'Docker'
     }
     //To specify IP addresses for aws tomcat instances
     parameters{
@@ -19,7 +17,7 @@ pipeline{
     stages{
         stage('Build'){
             steps{                
-                bat "Maven/bin/mvn clean install"                
+                bat "mvn clean install"                
             }
             post{
                 success{
@@ -39,7 +37,7 @@ pipeline{
                 }
             }
             steps{                
-                bat "Docker/docker build -t tomcatwebserver:${env.BUILD_ID} ."
+                bat "docker build -t tomcatwebserver:${env.BUILD_ID} ."
             }
         }
         stage('Deployment'){
