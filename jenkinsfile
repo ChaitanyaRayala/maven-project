@@ -2,6 +2,8 @@ pipeline{
     agent any
     tools{
         tool name: 'Jdk', type: 'jdk'
+        tool name: 'Maven', type: 'maven'
+        tool name: 'Docker', type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool'
     }
     //To specify IP addresses for aws tomcat instances
     parameters{
@@ -16,10 +18,8 @@ pipeline{
 
     stages{
         stage('Build'){
-            steps{
-                def maven = tool name: 'Maven', type: 'maven'
-                def mvn = "${maven}/bin/mvn"
-                bat "${mvn} clean install"                
+            steps{                
+                bat "Maven/bin/mvn clean install"                
             }
             post{
                 success{
@@ -32,9 +32,8 @@ pipeline{
             }
         }
         stage('Containerize built war file'){
-            steps{
-                def docker = tool name: 'localDocker', type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool'
-                bat "${docker} build -t tomcatwebserver:${env.BUILD_ID} ."
+            steps{                
+                bat "Docker/docker build -t tomcatwebserver:${env.BUILD_ID} ."
             }
         }
         stage('Deployment'){
