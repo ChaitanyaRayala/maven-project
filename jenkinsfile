@@ -1,9 +1,9 @@
 pipeline{
     agent any
     tools{
-        tool name: 'Jdk', type: 'jdk'
-        tool name: 'Maven', type: 'maven'
-        tool name: 'Docker', type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool'
+        jdk 'Jdk'
+        maven 'Maven'
+        docker 'Docker'
     }
     //To specify IP addresses for aws tomcat instances
     parameters{
@@ -32,6 +32,12 @@ pipeline{
             }
         }
         stage('Containerize built war file'){
+            agent{
+                dockerfile{
+                    filename 'Dockerfile'
+                    label 'windocker'
+                }
+            }
             steps{                
                 bat "Docker/docker build -t tomcatwebserver:${env.BUILD_ID} ."
             }
