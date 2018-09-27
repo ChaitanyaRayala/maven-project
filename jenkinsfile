@@ -31,11 +31,6 @@ pipeline{
             }
         }
         stage('Containerize built war file'){
-            agent{
-                dockerfile{
-                    filename 'Dockerfile'
-                }
-            }
             steps{                
                 bat "docker build -t tomcatwebserver:${env.BUILD_ID} ."
             }
