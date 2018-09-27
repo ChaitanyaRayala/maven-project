@@ -12,16 +12,16 @@ pipeline{
         string(name:'tomcat_production',defaultValue:'ec2-54-175-78-150.compute-1.amazonaws.com',description:'production server')
     }
     
-    //Run the jenkins job at given time conditions
+    /*Run the jenkins job at given time conditions
     triggers{
         pollSCM('* * * * *')
-    }
+    }*/
 
     stages{
         stage('Build'){
             steps{
                 bat 'mvn clean install'
-                //bat "docker.exe build -t tomcatwebserver:${env.BUILD_ID} ."
+                bat "docker build -t tomcatwebserver:${env.BUILD_ID} ."
             }
             post{
                 success{
